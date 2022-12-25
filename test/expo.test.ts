@@ -82,6 +82,31 @@ describe('expo', () => {
 	});
 
 	describe('#writeManifest', () => {
+		it('writes the manifest with outside keys unchanged', async () => {
+			const manifestData = { name: 'test' };
+			const manifestString = `{
+				"expo": {
+					"name": "old"
+				},
+				"outsideConfig": {
+					"key": "test-value"
+				}
+			}`;
+			const manifestMeta = {
+				content: manifestString,
+				filename: MANIFEST_FILE,
+				manifest: JSON.parse(manifestString).expo,
+			};
+
+			detectIndent.mockReturnValue({ indent: '\t' });
+			detectNewline.mockReturnValue('\n');
+
+			await writeManifest(manifestMeta, manifestData);
+
+			expect(detectIndent).toBeCalledWith(manifestString);
+			expect(detectNewline).toBeCalledWith(manifestString);
+			expect(writeJson).toBeCalledWith(MANIFEST_FILE, { expo: manifestData, outsideConfig: { key: 'test-value' } }, { spaces: '\t', EOL: '\n' });
+		})
 		it('writes the manifest file with indentation detection', async () => {
 			const manifestData = { name: 'test' };
 			const manifestString = `{

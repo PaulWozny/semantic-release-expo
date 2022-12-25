@@ -80,7 +80,10 @@ export async function writeManifest(meta: ManifestMeta, manifest: Manifest) {
 	const { indent } = detectIndent(meta.content) || { indent: DEFAULT_INDENT };
 	const newline = detectNewline(meta.content) || DEFAULT_NEWLINE;
 
-	await writeJson(meta.filename, { expo: manifest }, { spaces: indent, EOL: newline });
+	const entireManifest = 	JSON.parse(meta.content)
+	delete entireManifest['expo']
+
+	await writeJson(meta.filename, { expo: manifest, ...entireManifest }, { spaces: indent, EOL: newline });
 }
 
 /**

@@ -6,6 +6,8 @@ const bumpPlatformIos: VersionBumper = (meta, config, context) => {
 	const ios = getIosPlatform(meta.manifest);
 	const newVersion = calculateIosVersion(meta, config, context);
 
+	const formattedNewVersion = newVersion.replace('-','.')
+
 	context.logger.log(
 		'%s manifest ios version changed (%s => %s) in %s',
 		'Expo',
@@ -14,7 +16,7 @@ const bumpPlatformIos: VersionBumper = (meta, config, context) => {
 		meta.filename,
 	);
 
-	return { ...meta.manifest, ios: { ...ios, buildNumber: newVersion } };
+	return { ...meta.manifest, ios: { ...ios, buildNumber: formattedNewVersion } };
 };
 
 export default bumpPlatformIos;
